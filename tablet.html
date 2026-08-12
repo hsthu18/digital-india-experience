@@ -10,18 +10,12 @@
 
 <title>Digital India</title>
 
-
 <style>
-
-/* ================================= */
-/* PAGE                              */
-/* ================================= */
 
 html,
 body {
 
     margin: 0;
-
     width: 100%;
     height: 100%;
 
@@ -36,9 +30,9 @@ body {
 }
 
 
-/* ================================= */
-/* IDLE SCREEN                       */
-/* ================================= */
+/* ================================ */
+/* IDLE SCREEN                      */
+/* ================================ */
 
 #idle {
 
@@ -104,9 +98,9 @@ p {
 }
 
 
-/* ================================= */
-/* VIDEO SCREEN                      */
-/* ================================= */
+/* ================================ */
+/* VIDEO SCREEN                     */
+/* ================================ */
 
 #videoScreen {
 
@@ -127,13 +121,11 @@ p {
 }
 
 
-/* ================================= */
-/* VIDEO                             */
-/* ================================= */
+/* ================================ */
+/* VIDEO                            */
+/* ================================ */
 
 #digitalIndiaVideo {
-
-    display: block;
 
     width: 100vw;
     height: 100vh;
@@ -152,9 +144,9 @@ p {
 <body>
 
 
-<!-- ================================= -->
-<!-- IDLE SCREEN                       -->
-<!-- ================================= -->
+<!-- ================================ -->
+<!-- IDLE                            -->
+<!-- ================================ -->
 
 <div id="idle">
 
@@ -177,18 +169,23 @@ p {
 </div>
 
 
-<!-- ================================= -->
-<!-- VIDEO SCREEN                      -->
-<!-- ================================= -->
+<!-- ================================ -->
+<!-- VIDEO                           -->
+<!-- ================================ -->
 
 <div id="videoScreen">
 
     <video
         id="digitalIndiaVideo"
-        src="Snapchat-409127156.mp4"
         playsinline
         controls
-        preload="metadata">
+        preload="auto">
+
+        <source
+            src="Snapchat-409127156.mp4"
+            type="video/mp4">
+
+        Your browser does not support video.
 
     </video>
 
@@ -198,151 +195,106 @@ p {
 <script>
 
 
-/* ================================= */
-/* GOOGLE APPS SCRIPT                */
-/* ================================= */
+/* ================================ */
+/* GOOGLE APPS SCRIPT               */
+/* ================================ */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
 
 
-/* ================================= */
-/* SECURITY TOKEN                    */
-/* ================================= */
-
 const TOKEN =
 "DIGITALINDIA2047";
 
 
-/* ================================= */
-/* TRIGGER STATE                     */
-/* ================================= */
-
-/*
- * The tablet remembers the last trigger
- * it has seen.
- */
+/* ================================ */
+/* STATE                            */
+/* ================================ */
 
 let lastTriggerId = null;
-
-
-/*
- * This becomes true after the first
- * successful check of Google Apps Script.
- */
 
 let initialized = false;
 
 
-/* ================================= */
-/* PAGE ELEMENTS                     */
-/* ================================= */
+/* ================================ */
+/* ELEMENTS                         */
+/* ================================ */
 
 const idle =
-    document.getElementById(
-        "idle"
-    );
+document.getElementById("idle");
 
 
 const videoScreen =
-    document.getElementById(
-        "videoScreen"
-    );
+document.getElementById("videoScreen");
 
 
 const video =
-    document.getElementById(
-        "digitalIndiaVideo"
-    );
+document.getElementById(
+    "digitalIndiaVideo"
+);
 
 
-/* ================================= */
-/* INITIAL VIDEO STATE               */
-/* ================================= */
-
-/*
- * Make absolutely sure video is not
- * playing when tablet first opens.
- */
+/* ================================ */
+/* INITIAL VIDEO STATE              */
+/* ================================ */
 
 video.pause();
 
 video.currentTime = 0;
 
 
-/* ================================= */
-/* CHECK GOOGLE APPS SCRIPT          */
-/* ================================= */
+/* ================================ */
+/* GOOGLE STATUS                    */
+/* ================================ */
 
 async function checkTrigger() {
 
     try {
 
 
-        /* ============================= */
-        /* REQUEST STATUS                */
-        /* ============================= */
-
         const response =
-            await fetch(
+        await fetch(
 
-                API_URL +
-                "?action=status" +
-                "&token=" +
-                TOKEN +
-                "&t=" +
-                Date.now(),
+            API_URL +
+            "?action=status" +
+            "&token=" +
+            TOKEN +
+            "&t=" +
+            Date.now(),
 
-                {
-                    cache: "no-store"
-                }
+            {
+                cache: "no-store"
+            }
 
-            );
+        );
 
-
-        /* ============================= */
-        /* READ RESPONSE                 */
-        /* ============================= */
 
         const data =
-            await response.json();
+        await response.json();
 
 
         console.log(
-            "GOOGLE STATUS:",
+            "STATUS:",
             data
         );
 
 
-        /* ============================= */
-        /* FIRST CHECK                   */
-        /* ============================= */
+        /* ============================ */
+        /* FIRST CHECK                  */
+        /* ============================ */
 
         if (!initialized) {
 
 
-            /*
-             * Remember the trigger that
-             * already existed.
-             *
-             * DO NOT PLAY VIDEO.
-             */
-
             lastTriggerId =
-                data.triggerId || "";
+            data.triggerId || "";
 
 
             initialized = true;
 
 
             console.log(
-                "TABLET INITIALIZED"
-            );
-
-
-            console.log(
-                "CURRENT TRIGGER:",
-                lastTriggerId
+                "TABLET READY - OLD TRIGGER IGNORED"
             );
 
 
@@ -351,9 +303,9 @@ async function checkTrigger() {
         }
 
 
-        /* ============================= */
-        /* NEW TRIGGER                   */
-        /* ============================= */
+        /* ============================ */
+        /* NEW TRIGGER                  */
+        /* ============================ */
 
         if (
 
@@ -368,21 +320,13 @@ async function checkTrigger() {
 
 
             console.log(
-                "NEW QR TRIGGER DETECTED"
+                "NEW TRIGGER DETECTED"
             );
 
 
-            /*
-             * Remember new trigger
-             */
-
             lastTriggerId =
-                data.triggerId;
+            data.triggerId;
 
-
-            /*
-             * Start video
-             */
 
             startExperience();
 
@@ -393,121 +337,131 @@ async function checkTrigger() {
 
     catch (error) {
 
-
         console.log(
-            "TRIGGER CHECK ERROR:",
+            "CHECK ERROR:",
             error
         );
-
 
     }
 
 }
 
 
-/* ================================= */
-/* START EXPERIENCE                  */
-/* ================================= */
+/* ================================ */
+/* START EXPERIENCE                 */
+/* ================================ */
 
 function startExperience() {
 
 
     console.log(
-        "STARTING DIGITAL INDIA VIDEO"
+        "START EXPERIENCE CALLED"
     );
 
 
-    /* ============================= */
-    /* HIDE IDLE SCREEN              */
-    /* ============================= */
+    /* ============================ */
+    /* SHOW VIDEO SCREEN             */
+    /* ============================ */
 
     idle.style.display =
         "none";
 
 
-    /* ============================= */
-    /* SHOW VIDEO                    */
-    /* ============================= */
-
     videoScreen.style.display =
         "block";
 
 
-    /* ============================= */
-    /* START FROM BEGINNING          */
-    /* ============================= */
+    /* ============================ */
+    /* RESET VIDEO                  */
+    /* ============================ */
+
+    video.pause();
 
     video.currentTime = 0;
 
-
-    /* ============================= */
-    /* ENABLE AUDIO                  */
-    /* ============================= */
-
     video.muted = false;
 
-
-    video.volume = 1.0;
-
-
-    /* ============================= */
-    /* PLAY VIDEO                    */
-    /* ============================= */
-
-    const playPromise =
-        video.play();
+    video.volume = 1;
 
 
-    if (
-        playPromise !== undefined
-    ) {
+    /* ============================ */
+    /* LOAD VIDEO                   */
+    /* ============================ */
+
+    video.load();
 
 
-        playPromise
+    /* ============================ */
+    /* PLAY                         */
+    /* ============================ */
 
-            .then(() => {
+    setTimeout(
+
+        function() {
 
 
-                console.log(
-                    "VIDEO PLAYING WITH AUDIO"
+            const playPromise =
+                video.play();
+
+
+            if (
+                playPromise !== undefined
+            ) {
+
+
+                playPromise
+
+                .then(
+
+                    function() {
+
+                        console.log(
+                            "VIDEO PLAYING!"
+                        );
+
+                    }
+
+                )
+
+                .catch(
+
+                    function(error) {
+
+                        console.log(
+                            "VIDEO PLAY BLOCKED"
+                        );
+
+                        console.log(
+                            error.name
+                        );
+
+                        console.log(
+                            error.message
+                        );
+
+                    }
+
                 );
 
+            }
 
-            })
+        },
 
-            .catch(error => {
+        300
 
-
-                console.log(
-                    "AUTOPLAY BLOCKED"
-                );
-
-
-                console.log(
-                    "ERROR NAME:",
-                    error.name
-                );
-
-
-                console.log(
-                    "ERROR MESSAGE:",
-                    error.message
-                );
-
-
-            });
-
-    }
+    );
 
 }
 
 
-/* ================================= */
-/* VIDEO ENDED                      */
-/* ================================= */
+/* ================================ */
+/* VIDEO FINISHED                  */
+/* ================================ */
 
 video.addEventListener(
+
     "ended",
+
     function() {
 
 
@@ -516,43 +470,26 @@ video.addEventListener(
         );
 
 
-        /*
-         * Stop video
-         */
-
         video.pause();
-
 
         video.currentTime = 0;
 
-
-        /*
-         * Hide video
-         */
 
         videoScreen.style.display =
             "none";
 
 
-        /*
-         * Show idle screen
-         */
-
         idle.style.display =
             "flex";
 
-
-        console.log(
-            "TABLET READY FOR NEXT VISITOR"
-        );
-
     }
+
 );
 
 
-/* ================================= */
-/* CHECK EVERY SECOND                */
-/* ================================= */
+/* ================================ */
+/* CHECK EVERY SECOND              */
+/* ================================ */
 
 setInterval(
 
@@ -563,15 +500,14 @@ setInterval(
 );
 
 
-/* ================================= */
-/* FIRST CHECK                      */
-/* ================================= */
+/* ================================ */
+/* FIRST CHECK                     */
+/* ================================ */
 
 checkTrigger();
 
 
 </script>
-
 
 </body>
 
