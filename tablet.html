@@ -217,11 +217,16 @@ const TOKEN =
 /* LAST TRIGGER                      */
 /* ================================= */
 
-let lastTriggerId = "";
+/*
+ * null means the tablet has not yet
+ * checked Google Sheets.
+ */
+
+let lastTriggerId = null;
 
 
 /* ================================= */
-/* CHECK TRIGGER                     */
+/* CHECK FOR TRIGGER                 */
 /* ================================= */
 
 async function checkTrigger() {
@@ -246,14 +251,44 @@ async function checkTrigger() {
 
 
         console.log(
-            "Trigger:",
+            "Trigger status:",
             data
         );
 
 
-        /* ============================= */
-        /* NEW TRIGGER                   */
-        /* ============================= */
+        /* ================================= */
+        /* FIRST CHECK                       */
+        /* ================================= */
+
+        if (lastTriggerId === null) {
+
+            /*
+             * The tablet has just opened.
+             *
+             * Remember the trigger that already
+             * exists in Google Sheets.
+             *
+             * DO NOT start the video.
+             */
+
+            lastTriggerId =
+                data.triggerId || "";
+
+
+            console.log(
+                "Initial trigger remembered:",
+                lastTriggerId
+            );
+
+
+            return;
+
+        }
+
+
+        /* ================================= */
+        /* CHECK FOR NEW TRIGGER             */
+        /* ================================= */
 
         if (
 
@@ -266,14 +301,19 @@ async function checkTrigger() {
 
         ) {
 
+
             console.log(
                 "NEW TRIGGER DETECTED"
             );
 
 
+            /* Remember new trigger */
+
             lastTriggerId =
                 data.triggerId;
 
+
+            /* Start experience */
 
             startExperience();
 
@@ -284,7 +324,7 @@ async function checkTrigger() {
     catch (error) {
 
         console.log(
-            "Trigger error:",
+            "Trigger check error:",
             error
         );
 
@@ -301,9 +341,13 @@ function startExperience() {
 
 
     console.log(
-        "STARTING DIGITAL INDIA"
+        "STARTING DIGITAL INDIA EXPERIENCE"
     );
 
+
+    /* ============================= */
+    /* GET ELEMENTS                  */
+    /* ============================= */
 
     const idle =
         document.getElementById(
@@ -324,7 +368,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* HIDE IDLE                     */
+    /* HIDE IDLE SCREEN               */
     /* ============================= */
 
     idle.style.display =
@@ -332,7 +376,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* SHOW VIDEO                    */
+    /* SHOW VIDEO SCREEN              */
     /* ============================= */
 
     videoScreen.style.display =
@@ -340,14 +384,14 @@ function startExperience() {
 
 
     /* ============================= */
-    /* RESET VIDEO                   */
+    /* START FROM BEGINNING           */
     /* ============================= */
 
     video.currentTime = 0;
 
 
     /* ============================= */
-    /* PLAY VIDEO                    */
+    /* PLAY VIDEO                     */
     /* ============================= */
 
     video.play()
@@ -373,7 +417,7 @@ function startExperience() {
 
 
 /* ================================= */
-/* CHECK EVERY SECOND                */
+/* CHECK EVERY 1 SECOND              */
 /* ================================= */
 
 setInterval(
@@ -386,7 +430,7 @@ setInterval(
 
 
 /* ================================= */
-/* CHECK IMMEDIATELY                 */
+/* FIRST CHECK                       */
 /* ================================= */
 
 checkTrigger();
