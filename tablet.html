@@ -6,13 +6,16 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
 
 <title>Digital India</title>
 
 
 <style>
+
+/* ================================= */
+/* PAGE                              */
+/* ================================= */
 
 html,
 body {
@@ -33,9 +36,9 @@ body {
 }
 
 
-/* ============================= */
-/* IDLE SCREEN                   */
-/* ============================= */
+/* ================================= */
+/* IDLE SCREEN                       */
+/* ================================= */
 
 #idle {
 
@@ -101,9 +104,9 @@ p {
 }
 
 
-/* ============================= */
-/* VIDEO SCREEN                  */
-/* ============================= */
+/* ================================= */
+/* VIDEO SCREEN                      */
+/* ================================= */
 
 #videoScreen {
 
@@ -111,7 +114,8 @@ p {
 
     position: fixed;
 
-    inset: 0;
+    top: 0;
+    left: 0;
 
     width: 100vw;
     height: 100vh;
@@ -123,9 +127,9 @@ p {
 }
 
 
-/* ============================= */
-/* VIDEO                         */
-/* ============================= */
+/* ================================= */
+/* VIDEO                             */
+/* ================================= */
 
 #digitalIndiaVideo {
 
@@ -185,6 +189,7 @@ p {
         playsinline
         controls
         preload="metadata">
+
     </video>
 
 </div>
@@ -202,7 +207,7 @@ const API_URL =
 
 
 /* ================================= */
-/* TOKEN                             */
+/* SECURITY TOKEN                    */
 /* ================================= */
 
 const TOKEN =
@@ -210,24 +215,39 @@ const TOKEN =
 
 
 /* ================================= */
-/* STATE                             */
+/* TRIGGER STATE                     */
 /* ================================= */
 
+/*
+ * The tablet remembers the last trigger
+ * it has seen.
+ */
+
 let lastTriggerId = null;
+
+
+/*
+ * This becomes true after the first
+ * successful check of Google Apps Script.
+ */
 
 let initialized = false;
 
 
 /* ================================= */
-/* ELEMENTS                          */
+/* PAGE ELEMENTS                     */
 /* ================================= */
 
 const idle =
-    document.getElementById("idle");
+    document.getElementById(
+        "idle"
+    );
 
 
 const videoScreen =
-    document.getElementById("videoScreen");
+    document.getElementById(
+        "videoScreen"
+    );
 
 
 const video =
@@ -237,8 +257,13 @@ const video =
 
 
 /* ================================= */
-/* MAKE SURE VIDEO IS STOPPED        */
+/* INITIAL VIDEO STATE               */
 /* ================================= */
+
+/*
+ * Make absolutely sure video is not
+ * playing when tablet first opens.
+ */
 
 video.pause();
 
@@ -246,13 +271,17 @@ video.currentTime = 0;
 
 
 /* ================================= */
-/* CHECK GOOGLE                     */
+/* CHECK GOOGLE APPS SCRIPT          */
 /* ================================= */
 
 async function checkTrigger() {
 
     try {
 
+
+        /* ============================= */
+        /* REQUEST STATUS                */
+        /* ============================= */
 
         const response =
             await fetch(
@@ -270,6 +299,10 @@ async function checkTrigger() {
 
             );
 
+
+        /* ============================= */
+        /* READ RESPONSE                 */
+        /* ============================= */
 
         const data =
             await response.json();
@@ -289,9 +322,10 @@ async function checkTrigger() {
 
 
             /*
-             * Remember current trigger.
+             * Remember the trigger that
+             * already existed.
              *
-             * DO NOT play video.
+             * DO NOT PLAY VIDEO.
              */
 
             lastTriggerId =
@@ -302,12 +336,12 @@ async function checkTrigger() {
 
 
             console.log(
-                "TABLET READY"
+                "TABLET INITIALIZED"
             );
 
 
             console.log(
-                "Existing trigger:",
+                "CURRENT TRIGGER:",
                 lastTriggerId
             );
 
@@ -334,13 +368,21 @@ async function checkTrigger() {
 
 
             console.log(
-                "NEW TRIGGER!"
+                "NEW QR TRIGGER DETECTED"
             );
 
+
+            /*
+             * Remember new trigger
+             */
 
             lastTriggerId =
                 data.triggerId;
 
+
+            /*
+             * Start video
+             */
 
             startExperience();
 
@@ -351,10 +393,12 @@ async function checkTrigger() {
 
     catch (error) {
 
+
         console.log(
-            "STATUS ERROR:",
+            "TRIGGER CHECK ERROR:",
             error
         );
+
 
     }
 
@@ -369,12 +413,12 @@ function startExperience() {
 
 
     console.log(
-        "START EXPERIENCE"
+        "STARTING DIGITAL INDIA VIDEO"
     );
 
 
     /* ============================= */
-    /* HIDE IDLE                     */
+    /* HIDE IDLE SCREEN              */
     /* ============================= */
 
     idle.style.display =
@@ -390,38 +434,120 @@ function startExperience() {
 
 
     /* ============================= */
-    /* RESET                         */
+    /* START FROM BEGINNING          */
     /* ============================= */
-
-    video.pause();
 
     video.currentTime = 0;
 
 
     /* ============================= */
-    /* PLAY                          */
+    /* ENABLE AUDIO                  */
     /* ============================= */
 
-    video.play()
+    video.muted = false;
 
-        .then(() => {
 
-            console.log(
-                "VIDEO PLAYING"
-            );
+    video.volume = 1.0;
 
-        })
 
-        .catch(error => {
+    /* ============================= */
+    /* PLAY VIDEO                    */
+    /* ============================= */
 
-            console.log(
-                "PLAY ERROR:",
-                error
-            );
+    const playPromise =
+        video.play();
 
-        });
+
+    if (
+        playPromise !== undefined
+    ) {
+
+
+        playPromise
+
+            .then(() => {
+
+
+                console.log(
+                    "VIDEO PLAYING WITH AUDIO"
+                );
+
+
+            })
+
+            .catch(error => {
+
+
+                console.log(
+                    "AUTOPLAY BLOCKED"
+                );
+
+
+                console.log(
+                    "ERROR NAME:",
+                    error.name
+                );
+
+
+                console.log(
+                    "ERROR MESSAGE:",
+                    error.message
+                );
+
+
+            });
+
+    }
 
 }
+
+
+/* ================================= */
+/* VIDEO ENDED                      */
+/* ================================= */
+
+video.addEventListener(
+    "ended",
+    function() {
+
+
+        console.log(
+            "VIDEO FINISHED"
+        );
+
+
+        /*
+         * Stop video
+         */
+
+        video.pause();
+
+
+        video.currentTime = 0;
+
+
+        /*
+         * Hide video
+         */
+
+        videoScreen.style.display =
+            "none";
+
+
+        /*
+         * Show idle screen
+         */
+
+        idle.style.display =
+            "flex";
+
+
+        console.log(
+            "TABLET READY FOR NEXT VISITOR"
+        );
+
+    }
+);
 
 
 /* ================================= */
