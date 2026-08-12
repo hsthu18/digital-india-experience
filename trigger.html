@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Digital India</title>
+
+<style>
+
+body {
+
+margin:0;
+
+min-height:100vh;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+background:
+linear-gradient(
+135deg,
+#07111f,
+#173f67
+);
+
+font-family:Arial;
+
+color:white;
+
+text-align:center;
+
+}
+
+.card {
+
+max-width:500px;
+
+padding:40px 25px;
+
+}
+
+.flag {
+
+font-size:65px;
+
+}
+
+h1 {
+
+font-size:36px;
+
+}
+
+p {
+
+font-size:19px;
+
+opacity:.85;
+
+}
+
+button {
+
+margin-top:25px;
+
+padding:17px 35px;
+
+border:0;
+
+border-radius:30px;
+
+font-size:18px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+#message {
+
+margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+<div class="flag">🇮🇳</div>
+
+<h1>DIGITAL INDIA</h1>
+
+<p>INDIA @ 2047</p>
+
+<p>
+
+Your Digital India experience is ready.
+
+</p>
+
+
+<button onclick="startExperience()">
+
+START EXPERIENCE
+
+</button>
+
+
+<div id="message"></div>
+
+</div>
+
+
+<script>
+
+
+const API_URL =
+"YOUR_SCRIPT_URL";
+
+const TOKEN =
+"DIGITALINDIA2047";
+
+
+async function startExperience() {
+
+
+const message =
+document.getElementById(
+"message"
+);
+
+
+message.innerText =
+"Starting experience…";
+
+
+try {
+
+
+const response =
+await fetch(
+
+API_URL +
+"?action=trigger" +
+"&token=" +
+TOKEN +
+"&t=" +
+Date.now()
+
+);
+
+
+const data =
+await response.json();
+
+
+if(data.ok) {
+
+message.innerText =
+"Experience started. Look at the Digital India screen.";
+
+}
+
+else {
+
+message.innerText =
+"Unable to start. Please try again.";
+
+}
+
+
+}
+
+catch(error) {
+
+message.innerText =
+"Connection problem.";
+
+}
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
