@@ -104,6 +104,117 @@ iframe {
     </iframe>
 
 </div>
+      <script>
+
+// Your Google Apps Script URL
+const API_URL =
+"https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
+
+// Same token used by trigger.html
+const TOKEN =
+"DIGITALINDIA2047";
+
+
+// Remember the last trigger we have processed
+let lastTriggerId = "";
+
+
+// Check Google Apps Script
+async function checkTrigger() {
+
+    try {
+
+        const response = await fetch(
+
+            API_URL +
+            "?action=status" +
+            "&token=" +
+            TOKEN +
+            "&t=" +
+            Date.now()
+
+        );
+
+        const data =
+            await response.json();
+
+
+        console.log("Trigger status:", data);
+
+
+        // Did we receive a valid new trigger?
+        if (
+            data.ok &&
+            data.triggerId &&
+            data.triggerId !== lastTriggerId
+        ) {
+
+            // Remember this trigger
+            lastTriggerId =
+                data.triggerId;
+
+
+            // Start Digital India
+            startExperience();
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Trigger check failed:",
+            error
+        );
+
+    }
+
+}
+
+
+// Start the Digital India experience
+function startExperience() {
+
+    console.log(
+        "DIGITAL INDIA EXPERIENCE STARTED"
+    );
+
+
+    // Hide idle screen
+    document.getElementById(
+        "idle"
+    ).style.display = "none";
+
+
+    // Show video screen
+    document.getElementById(
+        "video"
+    ).style.display = "block";
+
+
+    // Put your video/experience URL here
+    document.querySelector(
+        "#video iframe"
+    ).src =
+        "https://www.youtube.com/embed/MrZ-fHGRxNI?autoplay=1&controls=1";
+
+
+}
+
+
+// Check every 1 second
+setInterval(
+    checkTrigger,
+    1000
+);
+
+
+// Check immediately when tablet opens
+checkTrigger();
+
+</script>
+
 
 </body>
 </html>
