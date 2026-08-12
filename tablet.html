@@ -1,0 +1,230 @@
+margin:0;
+width:100%;
+height:100%;
+
+overflow:hidden;
+
+background:#07111f;
+
+color:white;
+
+font-family:Arial,sans-serif;
+
+}
+
+#idle {
+
+width:100%;
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+text-align:center;
+
+background:
+radial-gradient(
+circle,
+#173f67,
+#07111f 65%,
+#02060a
+);
+
+}
+
+.flag {
+
+font-size:70px;
+
+}
+
+h1 {
+
+font-size:55px;
+
+letter-spacing:3px;
+
+margin:10px;
+
+}
+
+h2 {
+
+font-size:30px;
+
+font-weight:normal;
+
+margin:5px;
+
+}
+
+.tagline {
+
+font-size:22px;
+
+margin-top:30px;
+
+opacity:.85;
+
+}
+
+#video {
+
+display:none;
+
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+}
+
+iframe {
+
+width:100%;
+height:100%;
+
+border:0;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="idle">
+
+<div class="flag">🇮🇳</div>
+
+<h1>DIGITAL INDIA</h1>
+
+<h2>INDIA @ 2047</h2>
+
+<div class="tagline">
+
+SCAN TODAY. SHAPE TOMORROW.
+
+</div>
+
+</div>
+
+
+<div id="video">
+
+<iframe
+id="youtube"
+allow="autoplay; fullscreen"
+allowfullscreen>
+</iframe>
+
+</div>
+
+
+<script>
+
+
+const API_URL =
+"YOUR_SCRIPT_URL";
+
+const TOKEN =
+"DIGITALINDIA2047";
+
+let lastEvent = "";
+
+
+async function checkTrigger() {
+
+try {
+
+const response =
+await fetch(
+
+API_URL +
+"?action=status" +
+"&token=" +
+TOKEN +
+"&t=" +
+Date.now()
+
+);
+
+const data =
+await response.json();
+
+
+if (
+
+data.eventId &&
+data.eventId !== lastEvent
+
+) {
+
+lastEvent =
+data.eventId;
+
+playVideo();
+
+}
+
+}
+
+catch(error) {
+
+console.log(error);
+
+}
+
+}
+
+
+function playVideo() {
+
+
+document.getElementById(
+"idle"
+).style.display="none";
+
+
+document.getElementById(
+"video"
+).style.display="block";
+
+
+const iframe =
+document.getElementById(
+"youtube"
+);
+
+
+iframe.src =
+"https://www.youtube.com/embed/MrZ-fHGRxNI?autoplay=1&rel=0";
+
+
+}
+
+
+setInterval(
+checkTrigger,
+2000
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+Replace this:
