@@ -188,7 +188,7 @@ p {
         src="Snapchat-409127156.mp4"
         playsinline
         controls
-        preload="auto">
+        preload="metadata">
     </video>
 
 </div>
@@ -198,7 +198,7 @@ p {
 
 
 /* ================================= */
-/* GOOGLE APPS SCRIPT URL             */
+/* GOOGLE APPS SCRIPT                */
 /* ================================= */
 
 const API_URL =
@@ -214,24 +214,61 @@ const TOKEN =
 
 
 /* ================================= */
-/* LAST TRIGGER                      */
+/* TRIGGER STATE                     */
 /* ================================= */
 
+
 /*
- * null means the tablet has not yet
- * checked Google Sheets.
+ * null means:
+ *
+ * "Tablet has not checked Google Sheet yet."
  */
 
 let lastTriggerId = null;
 
 
+/*
+ * Becomes true after the first
+ * Google Sheet check.
+ */
+
+let initialized = false;
+
+
 /* ================================= */
-/* CHECK FOR TRIGGER                 */
+/* VIDEO ELEMENT                     */
+/* ================================= */
+
+const video =
+    document.getElementById(
+        "digitalIndiaVideo"
+    );
+
+
+/*
+ * IMPORTANT:
+ *
+ * Make absolutely sure the video
+ * is stopped when tablet opens.
+ */
+
+video.pause();
+
+video.currentTime = 0;
+
+
+/* ================================= */
+/* CHECK GOOGLE SHEET                */
 /* ================================= */
 
 async function checkTrigger() {
 
     try {
+
+
+        /* ============================= */
+        /* REQUEST STATUS                */
+        /* ============================= */
 
         const response =
             await fetch(
@@ -241,18 +278,28 @@ async function checkTrigger() {
                 "&token=" +
                 TOKEN +
                 "&t=" +
-                Date.now()
+                Date.now(),
+
+                {
+                    cache: "no-store"
+                }
 
             );
 
+
+        /* ============================= */
+        /* READ RESPONSE                 */
+        /* ============================= */
 
         const data =
             await response.json();
 
 
         console.log(
-            "Trigger status:",
-            data
+            "TABLET CHECK:",
+            data.triggerId,
+            "LAST:",
+            lastTriggerId
         );
 
 
@@ -260,23 +307,32 @@ async function checkTrigger() {
         /* FIRST CHECK                       */
         /* ================================= */
 
+
         if (lastTriggerId === null) {
 
+
             /*
-             * The tablet has just opened.
+             * Remember whatever trigger
+             * already exists.
              *
-             * Remember the trigger that already
-             * exists in Google Sheets.
-             *
-             * DO NOT start the video.
+             * DO NOT START VIDEO.
              */
+
 
             lastTriggerId =
                 data.triggerId || "";
 
 
+            initialized = true;
+
+
             console.log(
-                "Initial trigger remembered:",
+                "TABLET INITIALIZED."
+            );
+
+
+            console.log(
+                "Existing trigger:",
                 lastTriggerId
             );
 
@@ -287,10 +343,13 @@ async function checkTrigger() {
 
 
         /* ================================= */
-        /* CHECK FOR NEW TRIGGER             */
+        /* ONLY AFTER INITIALIZATION          */
         /* ================================= */
 
+
         if (
+
+            initialized &&
 
             data.ok &&
 
@@ -303,30 +362,37 @@ async function checkTrigger() {
 
 
             console.log(
-                "NEW TRIGGER DETECTED"
+                "NEW QR TRIGGER DETECTED!"
             );
 
 
-            /* Remember new trigger */
+            /* ============================= */
+            /* SAVE NEW TRIGGER              */
+            /* ============================= */
 
             lastTriggerId =
                 data.triggerId;
 
 
-            /* Start experience */
+            /* ============================= */
+            /* START EXPERIENCE              */
+            /* ============================= */
 
             startExperience();
 
         }
 
+
     }
 
     catch (error) {
 
+
         console.log(
-            "Trigger check error:",
+            "TRIGGER CHECK ERROR:",
             error
         );
+
 
     }
 
@@ -346,7 +412,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* GET ELEMENTS                  */
+    /* GET SCREENS                   */
     /* ============================= */
 
     const idle =
@@ -358,12 +424,6 @@ function startExperience() {
     const videoScreen =
         document.getElementById(
             "videoScreen"
-        );
-
-
-    const video =
-        document.getElementById(
-            "digitalIndiaVideo"
         );
 
 
@@ -384,34 +444,41 @@ function startExperience() {
 
 
     /* ============================= */
-    /* START FROM BEGINNING           */
+    /* RESET VIDEO                   */
     /* ============================= */
+
+    video.pause();
 
     video.currentTime = 0;
 
 
     /* ============================= */
-    /* PLAY VIDEO                     */
+    /* PLAY VIDEO                    */
     /* ============================= */
 
     video.play()
 
         .then(() => {
 
+
             console.log(
                 "VIDEO PLAYING"
             );
 
+
         })
 
         .catch(error => {
+
 
             console.log(
                 "VIDEO PLAY ERROR:",
                 error
             );
 
+
         });
+
 
 }
 
@@ -430,7 +497,7 @@ setInterval(
 
 
 /* ================================= */
-/* FIRST CHECK                       */
+/* INITIAL CHECK                     */
 /* ================================= */
 
 checkTrigger();
