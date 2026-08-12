@@ -6,16 +6,13 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width,
+               initial-scale=1.0">
 
 <title>Digital India</title>
 
 
 <style>
-
-/* ================================= */
-/* PAGE                              */
-/* ================================= */
 
 html,
 body {
@@ -36,9 +33,9 @@ body {
 }
 
 
-/* ================================= */
-/* IDLE SCREEN                       */
-/* ================================= */
+/* ============================= */
+/* IDLE SCREEN                   */
+/* ============================= */
 
 #idle {
 
@@ -104,9 +101,9 @@ p {
 }
 
 
-/* ================================= */
-/* VIDEO SCREEN                      */
-/* ================================= */
+/* ============================= */
+/* VIDEO SCREEN                  */
+/* ============================= */
 
 #videoScreen {
 
@@ -114,24 +111,25 @@ p {
 
     position: fixed;
 
-    top: 0;
-    left: 0;
+    inset: 0;
 
     width: 100vw;
     height: 100vh;
 
     background: black;
 
-    z-index: 1000;
+    z-index: 9999;
 
 }
 
 
-/* ================================= */
-/* VIDEO                             */
-/* ================================= */
+/* ============================= */
+/* VIDEO                         */
+/* ============================= */
 
 #digitalIndiaVideo {
+
+    display: block;
 
     width: 100vw;
     height: 100vh;
@@ -171,8 +169,6 @@ p {
     <p>
         SCAN TODAY. SHAPE TOMORROW.
     </p>
-
-    <div id="qrcode"></div>
 
 </div>
 
@@ -214,30 +210,25 @@ const TOKEN =
 
 
 /* ================================= */
-/* TRIGGER STATE                     */
+/* STATE                             */
 /* ================================= */
 
-
-/*
- * null means:
- *
- * "Tablet has not checked Google Sheet yet."
- */
-
 let lastTriggerId = null;
-
-
-/*
- * Becomes true after the first
- * Google Sheet check.
- */
 
 let initialized = false;
 
 
 /* ================================= */
-/* VIDEO ELEMENT                     */
+/* ELEMENTS                          */
 /* ================================= */
+
+const idle =
+    document.getElementById("idle");
+
+
+const videoScreen =
+    document.getElementById("videoScreen");
+
 
 const video =
     document.getElementById(
@@ -245,12 +236,9 @@ const video =
     );
 
 
-/*
- * IMPORTANT:
- *
- * Make absolutely sure the video
- * is stopped when tablet opens.
- */
+/* ================================= */
+/* MAKE SURE VIDEO IS STOPPED        */
+/* ================================= */
 
 video.pause();
 
@@ -258,17 +246,13 @@ video.currentTime = 0;
 
 
 /* ================================= */
-/* CHECK GOOGLE SHEET                */
+/* CHECK GOOGLE                     */
 /* ================================= */
 
 async function checkTrigger() {
 
     try {
 
-
-        /* ============================= */
-        /* REQUEST STATUS                */
-        /* ============================= */
 
         const response =
             await fetch(
@@ -287,37 +271,28 @@ async function checkTrigger() {
             );
 
 
-        /* ============================= */
-        /* READ RESPONSE                 */
-        /* ============================= */
-
         const data =
             await response.json();
 
 
         console.log(
-            "TABLET CHECK:",
-            data.triggerId,
-            "LAST:",
-            lastTriggerId
+            "GOOGLE STATUS:",
+            data
         );
 
 
-        /* ================================= */
-        /* FIRST CHECK                       */
-        /* ================================= */
+        /* ============================= */
+        /* FIRST CHECK                   */
+        /* ============================= */
 
-
-        if (lastTriggerId === null) {
+        if (!initialized) {
 
 
             /*
-             * Remember whatever trigger
-             * already exists.
+             * Remember current trigger.
              *
-             * DO NOT START VIDEO.
+             * DO NOT play video.
              */
-
 
             lastTriggerId =
                 data.triggerId || "";
@@ -327,7 +302,7 @@ async function checkTrigger() {
 
 
             console.log(
-                "TABLET INITIALIZED."
+                "TABLET READY"
             );
 
 
@@ -342,14 +317,11 @@ async function checkTrigger() {
         }
 
 
-        /* ================================= */
-        /* ONLY AFTER INITIALIZATION          */
-        /* ================================= */
-
+        /* ============================= */
+        /* NEW TRIGGER                   */
+        /* ============================= */
 
         if (
-
-            initialized &&
 
             data.ok &&
 
@@ -362,21 +334,13 @@ async function checkTrigger() {
 
 
             console.log(
-                "NEW QR TRIGGER DETECTED!"
+                "NEW TRIGGER!"
             );
 
-
-            /* ============================= */
-            /* SAVE NEW TRIGGER              */
-            /* ============================= */
 
             lastTriggerId =
                 data.triggerId;
 
-
-            /* ============================= */
-            /* START EXPERIENCE              */
-            /* ============================= */
 
             startExperience();
 
@@ -387,12 +351,10 @@ async function checkTrigger() {
 
     catch (error) {
 
-
         console.log(
-            "TRIGGER CHECK ERROR:",
+            "STATUS ERROR:",
             error
         );
-
 
     }
 
@@ -407,28 +369,12 @@ function startExperience() {
 
 
     console.log(
-        "STARTING DIGITAL INDIA EXPERIENCE"
+        "START EXPERIENCE"
     );
 
 
     /* ============================= */
-    /* GET SCREENS                   */
-    /* ============================= */
-
-    const idle =
-        document.getElementById(
-            "idle"
-        );
-
-
-    const videoScreen =
-        document.getElementById(
-            "videoScreen"
-        );
-
-
-    /* ============================= */
-    /* HIDE IDLE SCREEN               */
+    /* HIDE IDLE                     */
     /* ============================= */
 
     idle.style.display =
@@ -436,7 +382,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* SHOW VIDEO SCREEN              */
+    /* SHOW VIDEO                    */
     /* ============================= */
 
     videoScreen.style.display =
@@ -444,7 +390,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* RESET VIDEO                   */
+    /* RESET                         */
     /* ============================= */
 
     video.pause();
@@ -453,38 +399,33 @@ function startExperience() {
 
 
     /* ============================= */
-    /* PLAY VIDEO                    */
+    /* PLAY                          */
     /* ============================= */
 
     video.play()
 
         .then(() => {
 
-
             console.log(
                 "VIDEO PLAYING"
             );
-
 
         })
 
         .catch(error => {
 
-
             console.log(
-                "VIDEO PLAY ERROR:",
+                "PLAY ERROR:",
                 error
             );
 
-
         });
-
 
 }
 
 
 /* ================================= */
-/* CHECK EVERY 1 SECOND              */
+/* CHECK EVERY SECOND                */
 /* ================================= */
 
 setInterval(
@@ -497,7 +438,7 @@ setInterval(
 
 
 /* ================================= */
-/* INITIAL CHECK                     */
+/* FIRST CHECK                      */
 /* ================================= */
 
 checkTrigger();
