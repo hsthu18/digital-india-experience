@@ -13,23 +13,46 @@
 
 <style>
 
-html, body {
+/* ============================= */
+/* BASIC PAGE                    */
+/* ============================= */
+
+html,
+body {
+
     margin: 0;
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
     background: #07111f;
+
     color: white;
+
     font-family: Arial, sans-serif;
+
 }
 
+
+/* ============================= */
+/* IDLE SCREEN                   */
+/* ============================= */
+
 #idle {
+
     width: 100%;
     height: 100%;
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
+
     align-items: center;
+
     text-align: center;
 
     background:
@@ -39,65 +62,104 @@ html, body {
             #07111f 65%,
             #02060a
         );
+
 }
+
 
 #flag {
+
     font-size: 70px;
+
 }
+
 
 h1 {
+
     font-size: 55px;
+
     letter-spacing: 3px;
+
     margin: 10px 0;
+
 }
+
 
 h2 {
+
     font-size: 32px;
+
     margin: 10px 0;
+
 }
+
 
 p {
+
     font-size: 22px;
+
     margin-top: 30px;
+
     opacity: 0.85;
+
 }
+
+
+/* ============================= */
+/* VIDEO CONTAINER               */
+/* ============================= */
 
 #video {
+
     display: none;
 
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: fixed;
 
-    width: 100%;
-    height: 100%;
-
-    background: black;
-}
-
-#digitalIndiaVideo {
-    position: absolute;
     top: 0;
     left: 0;
 
     width: 100vw;
     height: 100vh;
 
+    background: black;
+
+    z-index: 1000;
+
+}
+
+
+/* ============================= */
+/* VIDEO                         */
+/* ============================= */
+
+#digitalIndiaVideo {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
     object-fit: contain;
 
     background: black;
+
+    z-index: 1001;
+
 }
 
 </style>
 
 </head>
 
+
 <body>
 
 
-<!-- ========================= -->
-<!-- IDLE SCREEN                -->
-<!-- ========================= -->
+<!-- ================================= -->
+<!-- IDLE SCREEN                       -->
+<!-- ================================= -->
 
 <div id="idle">
 
@@ -107,28 +169,32 @@ p {
 
     <h2>INDIA @ 2047</h2>
 
-    <p>SCAN TODAY. SHAPE TOMORROW.</p>
+    <p>
+        SCAN TODAY. SHAPE TOMORROW.
+    </p>
 
     <div id="qrcode"></div>
 
 </div>
 
 
-<!-- ========================= -->
-<!-- VIDEO SCREEN               -->
-<!-- ========================= -->
+<!-- ================================= -->
+<!-- VIDEO SCREEN                      -->
+<!-- ================================= -->
 
 <div id="video">
 
     <video
         id="digitalIndiaVideo"
-        playsinline>
+        playsinline
+        controls>
 
         <source
             src="Snapchat-409127156.mp4"
             type="video/mp4">
 
-        Your browser does not support video playback.
+        Your browser does not support
+        video playback.
 
     </video>
 
@@ -138,28 +204,32 @@ p {
 <script>
 
 
-// =============================
-// GOOGLE APPS SCRIPT
-// =============================
+/* ================================= */
+/* GOOGLE APPS SCRIPT                */
+/* ================================= */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
 
 
+/* ================================= */
+/* SECURITY TOKEN                    */
+/* ================================= */
+
 const TOKEN =
 "DIGITALINDIA2047";
 
 
-// =============================
-// REMEMBER LAST TRIGGER
-// =============================
+/* ================================= */
+/* LAST PROCESSED TRIGGER             */
+/* ================================= */
 
 let lastTriggerId = "";
 
 
-// =============================
-// CHECK FOR NEW QR TRIGGER
-// =============================
+/* ================================= */
+/* CHECK GOOGLE SHEET TRIGGER         */
+/* ================================= */
 
 async function checkTrigger() {
 
@@ -188,15 +258,34 @@ async function checkTrigger() {
         );
 
 
+        /* ============================= */
+        /* NEW TRIGGER FOUND              */
+        /* ============================= */
+
         if (
+
             data.ok &&
+
             data.triggerId &&
-            data.triggerId !== lastTriggerId
+
+            data.triggerId !==
+            lastTriggerId
+
         ) {
+
+
+            console.log(
+                "NEW QR TRIGGER FOUND"
+            );
+
+
+            /* Remember trigger */
 
             lastTriggerId =
                 data.triggerId;
 
+
+            /* Start experience */
 
             startExperience();
 
@@ -216,34 +305,33 @@ async function checkTrigger() {
 }
 
 
-// =============================
-// START DIGITAL INDIA
-// =============================
+/* ================================= */
+/* START DIGITAL INDIA EXPERIENCE     */
+/* ================================= */
 
 function startExperience() {
+
 
     console.log(
         "DIGITAL INDIA EXPERIENCE STARTED"
     );
 
 
-    // Hide idle screen
+    /* ============================= */
+    /* GET ELEMENTS                  */
+    /* ============================= */
 
-    document.getElementById(
-        "idle"
-    ).style.display =
-        "none";
-
-
-    // Show video
-
-    document.getElementById(
-        "video"
-    ).style.display =
-        "block";
+    const idle =
+        document.getElementById(
+            "idle"
+        );
 
 
-    // Get video
+    const videoContainer =
+        document.getElementById(
+            "video"
+        );
+
 
     const video =
         document.getElementById(
@@ -251,14 +339,40 @@ function startExperience() {
         );
 
 
-    // Start video
+    /* ============================= */
+    /* HIDE IDLE SCREEN               */
+    /* ============================= */
+
+    idle.style.display =
+        "none";
+
+
+    /* ============================= */
+    /* SHOW VIDEO SCREEN              */
+    /* ============================= */
+
+    videoContainer.style.display =
+        "block";
+
+
+    videoContainer.style.visibility =
+        "visible";
+
+
+    video.style.visibility =
+        "visible";
+
+
+    /* ============================= */
+    /* START VIDEO                    */
+    /* ============================= */
 
     video.play()
 
         .then(() => {
 
             console.log(
-                "Video started successfully"
+                "VIDEO PLAYING"
             );
 
         })
@@ -266,7 +380,7 @@ function startExperience() {
         .catch(error => {
 
             console.log(
-                "Autoplay was blocked:",
+                "VIDEO PLAY ERROR:",
                 error
             );
 
@@ -275,19 +389,22 @@ function startExperience() {
 }
 
 
-// =============================
-// CHECK EVERY 1 SECOND
-// =============================
+/* ================================= */
+/* CHECK EVERY SECOND                */
+/* ================================= */
 
 setInterval(
+
     checkTrigger,
+
     1000
+
 );
 
 
-// =============================
-// INITIAL CHECK
-// =============================
+/* ================================= */
+/* CHECK IMMEDIATELY                 */
+/* ================================= */
 
 checkTrigger();
 
