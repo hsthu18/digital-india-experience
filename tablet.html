@@ -6,146 +6,33 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
 
-<title>Digital India</title>
+<title>Video Test</title>
 
 <style>
-
-/* ============================= */
-/* BASIC PAGE                    */
-/* ============================= */
 
 html,
 body {
 
     margin: 0;
-
     width: 100%;
     height: 100%;
+
+    background: black;
 
     overflow: hidden;
 
-    background: #07111f;
-
-    color: white;
-
-    font-family: Arial, sans-serif;
-
 }
 
-
-/* ============================= */
-/* IDLE SCREEN                   */
-/* ============================= */
-
-#idle {
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
-    align-items: center;
-
-    text-align: center;
-
-    background:
-        radial-gradient(
-            circle,
-            #173f67,
-            #07111f 65%,
-            #02060a
-        );
-
-}
-
-
-#flag {
-
-    font-size: 70px;
-
-}
-
-
-h1 {
-
-    font-size: 55px;
-
-    letter-spacing: 3px;
-
-    margin: 10px 0;
-
-}
-
-
-h2 {
-
-    font-size: 32px;
-
-    margin: 10px 0;
-
-}
-
-
-p {
-
-    font-size: 22px;
-
-    margin-top: 30px;
-
-    opacity: 0.85;
-
-}
-
-
-/* ============================= */
-/* VIDEO CONTAINER               */
-/* ============================= */
-
-#video {
-
-    display: none;
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
+video {
 
     width: 100vw;
     height: 100vh;
 
-    background: black;
-
-    z-index: 1000;
-
-}
-
-
-/* ============================= */
-/* VIDEO                         */
-/* ============================= */
-
-#digitalIndiaVideo {
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
     object-fit: contain;
 
     background: black;
-
-    z-index: 1001;
 
 }
 
@@ -153,264 +40,16 @@ p {
 
 </head>
 
-
 <body>
 
-
-<!-- ================================= -->
-<!-- IDLE SCREEN                       -->
-<!-- ================================= -->
-
-<div id="idle">
-
-    <div id="flag">🇮🇳</div>
-
-    <h1>DIGITAL INDIA</h1>
-
-    <h2>INDIA @ 2047</h2>
-
-    <p>
-        SCAN TODAY. SHAPE TOMORROW.
-    </p>
-
-    <div id="qrcode"></div>
-
-</div>
-
-
-<!-- ================================= -->
-<!-- VIDEO SCREEN                      -->
-<!-- ================================= -->
-
-<div id="video">
-
-    <video
-        id="digitalIndiaVideo"
-        playsinline
-        controls>
-
-        <source
-            src="Snapchat-409127156.mp4"
-            type="video/mp4">
-
-        Your browser does not support
-        video playback.
-
-    </video>
-
-</div>
-
-
-<script>
-
-
-/* ================================= */
-/* GOOGLE APPS SCRIPT                */
-/* ================================= */
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
-
-
-/* ================================= */
-/* SECURITY TOKEN                    */
-/* ================================= */
-
-const TOKEN =
-"DIGITALINDIA2047";
-
-
-/* ================================= */
-/* LAST PROCESSED TRIGGER             */
-/* ================================= */
-
-let lastTriggerId = "";
-
-
-/* ================================= */
-/* CHECK GOOGLE SHEET TRIGGER         */
-/* ================================= */
-
-async function checkTrigger() {
-
-    try {
-
-        const response =
-            await fetch(
-
-                API_URL +
-                "?action=status" +
-                "&token=" +
-                TOKEN +
-                "&t=" +
-                Date.now()
-
-            );
-
-
-        const data =
-            await response.json();
-
-
-        console.log(
-            "Trigger status:",
-            data
-        );
-
-
-        /* ============================= */
-        /* NEW TRIGGER FOUND              */
-        /* ============================= */
-
-        if (
-
-            data.ok &&
-
-            data.triggerId &&
-
-            data.triggerId !==
-            lastTriggerId
-
-        ) {
-
-
-            console.log(
-                "NEW QR TRIGGER FOUND"
-            );
-
-
-            /* Remember trigger */
-
-            lastTriggerId =
-                data.triggerId;
-
-
-            /* Start experience */
-
-            startExperience();
-
-        }
-
-    }
-
-    catch (error) {
-
-        console.log(
-            "Trigger check failed:",
-            error
-        );
-
-    }
-
-}
-
-
-/* ================================= */
-/* START DIGITAL INDIA EXPERIENCE     */
-/* ================================= */
-
-function startExperience() {
-
-
-    console.log(
-        "DIGITAL INDIA EXPERIENCE STARTED"
-    );
-
-
-    /* ============================= */
-    /* GET ELEMENTS                  */
-    /* ============================= */
-
-    const idle =
-        document.getElementById(
-            "idle"
-        );
-
-
-    const videoContainer =
-        document.getElementById(
-            "video"
-        );
-
-
-    const video =
-        document.getElementById(
-            "digitalIndiaVideo"
-        );
-
-
-    /* ============================= */
-    /* HIDE IDLE SCREEN               */
-    /* ============================= */
-
-    idle.style.display =
-        "none";
-
-
-    /* ============================= */
-    /* SHOW VIDEO SCREEN              */
-    /* ============================= */
-
-    videoContainer.style.display =
-        "block";
-
-
-    videoContainer.style.visibility =
-        "visible";
-
-
-    video.style.visibility =
-        "visible";
-
-
-    /* ============================= */
-    /* START VIDEO                    */
-    /* ============================= */
-
-    video.play()
-
-        .then(() => {
-
-            console.log(
-                "VIDEO PLAYING"
-            );
-
-        })
-
-        .catch(error => {
-
-            console.log(
-                "VIDEO PLAY ERROR:",
-                error
-            );
-
-        });
-
-}
-
-
-/* ================================= */
-/* CHECK EVERY SECOND                */
-/* ================================= */
-
-setInterval(
-
-    checkTrigger,
-
-    1000
-
-);
-
-
-/* ================================= */
-/* CHECK IMMEDIATELY                 */
-/* ================================= */
-
-checkTrigger();
-
-
-</script>
-
+<video
+    id="testVideo"
+    src="Snapchat-409127156.mp4"
+    controls
+    autoplay
+    playsinline
+    preload="auto">
+</video>
 
 </body>
 
