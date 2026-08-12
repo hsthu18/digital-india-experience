@@ -31,6 +31,7 @@ html, body {
     justify-content: center;
     align-items: center;
     text-align: center;
+
     background:
         radial-gradient(
             circle,
@@ -63,11 +64,15 @@ p {
 
 #video {
     display: none;
+
     position: absolute;
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
+
+    background: black;
 }
 
 #digitalIndiaVideo {
@@ -89,6 +94,11 @@ p {
 
 <body>
 
+
+<!-- ========================= -->
+<!-- IDLE SCREEN                -->
+<!-- ========================= -->
+
 <div id="idle">
 
     <div id="flag">🇮🇳</div>
@@ -100,14 +110,19 @@ p {
     <p>SCAN TODAY. SHAPE TOMORROW.</p>
 
     <div id="qrcode"></div>
-</div>      
+
+</div>
+
+
+<!-- ========================= -->
+<!-- VIDEO SCREEN               -->
+<!-- ========================= -->
 
 <div id="video">
 
     <video
         id="digitalIndiaVideo"
-        playsinline
-        controls>
+        playsinline>
 
         <source
             src="Snapchat-409127156.mp4"
@@ -118,57 +133,71 @@ p {
     </video>
 
 </div>
-      <script>
 
-// Your Google Apps Script URL
+
+<script>
+
+
+// =============================
+// GOOGLE APPS SCRIPT
+// =============================
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
 
-// Same token used by trigger.html
+
 const TOKEN =
 "DIGITALINDIA2047";
 
 
-// Remember the last trigger we have processed
+// =============================
+// REMEMBER LAST TRIGGER
+// =============================
+
 let lastTriggerId = "";
 
 
-// Check Google Apps Script
+// =============================
+// CHECK FOR NEW QR TRIGGER
+// =============================
+
 async function checkTrigger() {
 
     try {
 
-        const response = await fetch(
+        const response =
+            await fetch(
 
-            API_URL +
-            "?action=status" +
-            "&token=" +
-            TOKEN +
-            "&t=" +
-            Date.now()
+                API_URL +
+                "?action=status" +
+                "&token=" +
+                TOKEN +
+                "&t=" +
+                Date.now()
 
-        );
+            );
+
 
         const data =
             await response.json();
 
 
-        console.log("Trigger status:", data);
+        console.log(
+            "Trigger status:",
+            data
+        );
 
 
-        // Did we receive a valid new trigger?
         if (
             data.ok &&
             data.triggerId &&
             data.triggerId !== lastTriggerId
         ) {
 
-            // Remember this trigger
             lastTriggerId =
                 data.triggerId;
 
 
-            // Start Digital India
             startExperience();
 
         }
@@ -187,7 +216,10 @@ async function checkTrigger() {
 }
 
 
-// Start the Digital India experience
+// =============================
+// START DIGITAL INDIA
+// =============================
+
 function startExperience() {
 
     console.log(
@@ -196,26 +228,33 @@ function startExperience() {
 
 
     // Hide idle screen
+
     document.getElementById(
         "idle"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     // Show video
+
     document.getElementById(
         "video"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 
-    // Get video element
+    // Get video
+
     const video =
         document.getElementById(
             "digitalIndiaVideo"
         );
 
 
-    // Start playback
+    // Start video
+
     video.play()
+
         .then(() => {
 
             console.log(
@@ -223,6 +262,7 @@ function startExperience() {
             );
 
         })
+
         .catch(error => {
 
             console.log(
@@ -235,18 +275,26 @@ function startExperience() {
 }
 
 
-// Check every 1 second
+// =============================
+// CHECK EVERY 1 SECOND
+// =============================
+
 setInterval(
     checkTrigger,
     1000
 );
 
 
-// Check immediately when tablet opens
+// =============================
+// INITIAL CHECK
+// =============================
+
 checkTrigger();
+
 
 </script>
 
 
 </body>
+
 </html>
