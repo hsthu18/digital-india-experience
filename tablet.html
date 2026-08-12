@@ -8,24 +8,130 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Video Test</title>
+<title>Digital India</title>
+
 
 <style>
+
+/* ================================= */
+/* PAGE                              */
+/* ================================= */
 
 html,
 body {
 
     margin: 0;
+
     width: 100%;
     height: 100%;
 
-    background: black;
-
     overflow: hidden;
+
+    background: #07111f;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
 
 }
 
-video {
+
+/* ================================= */
+/* IDLE SCREEN                       */
+/* ================================= */
+
+#idle {
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle,
+            #173f67,
+            #07111f 65%,
+            #02060a
+        );
+
+}
+
+
+#flag {
+
+    font-size: 70px;
+
+}
+
+
+h1 {
+
+    font-size: 55px;
+
+    letter-spacing: 3px;
+
+    margin: 10px 0;
+
+}
+
+
+h2 {
+
+    font-size: 32px;
+
+    margin: 10px 0;
+
+}
+
+
+p {
+
+    font-size: 22px;
+
+    margin-top: 30px;
+
+    opacity: 0.85;
+
+}
+
+
+/* ================================= */
+/* VIDEO SCREEN                      */
+/* ================================= */
+
+#videoScreen {
+
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: black;
+
+    z-index: 1000;
+
+}
+
+
+/* ================================= */
+/* VIDEO                             */
+/* ================================= */
+
+#digitalIndiaVideo {
 
     width: 100vw;
     height: 100vh;
@@ -40,16 +146,254 @@ video {
 
 </head>
 
+
 <body>
 
-<video
-    id="testVideo"
-    src="Snapchat-409127156.mp4"
-    controls
-    autoplay
-    playsinline
-    preload="auto">
-</video>
+
+<!-- ================================= -->
+<!-- IDLE SCREEN                       -->
+<!-- ================================= -->
+
+<div id="idle">
+
+    <div id="flag">
+        🇮🇳
+    </div>
+
+    <h1>
+        DIGITAL INDIA
+    </h1>
+
+    <h2>
+        INDIA @ 2047
+    </h2>
+
+    <p>
+        SCAN TODAY. SHAPE TOMORROW.
+    </p>
+
+    <div id="qrcode"></div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- VIDEO SCREEN                      -->
+<!-- ================================= -->
+
+<div id="videoScreen">
+
+    <video
+        id="digitalIndiaVideo"
+        src="Snapchat-409127156.mp4"
+        playsinline
+        controls
+        preload="auto">
+    </video>
+
+</div>
+
+
+<script>
+
+
+/* ================================= */
+/* GOOGLE APPS SCRIPT URL             */
+/* ================================= */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbw90g38bCidu7E4ZTbnm2n7tUE4G-AQkgLaWx94Gi5curKVm9qYsykA7NCDK79Dalh7YQ/exec";
+
+
+/* ================================= */
+/* TOKEN                             */
+/* ================================= */
+
+const TOKEN =
+"DIGITALINDIA2047";
+
+
+/* ================================= */
+/* LAST TRIGGER                      */
+/* ================================= */
+
+let lastTriggerId = "";
+
+
+/* ================================= */
+/* CHECK TRIGGER                     */
+/* ================================= */
+
+async function checkTrigger() {
+
+    try {
+
+        const response =
+            await fetch(
+
+                API_URL +
+                "?action=status" +
+                "&token=" +
+                TOKEN +
+                "&t=" +
+                Date.now()
+
+            );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Trigger:",
+            data
+        );
+
+
+        /* ============================= */
+        /* NEW TRIGGER                   */
+        /* ============================= */
+
+        if (
+
+            data.ok &&
+
+            data.triggerId &&
+
+            data.triggerId !==
+            lastTriggerId
+
+        ) {
+
+            console.log(
+                "NEW TRIGGER DETECTED"
+            );
+
+
+            lastTriggerId =
+                data.triggerId;
+
+
+            startExperience();
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Trigger error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ================================= */
+/* START EXPERIENCE                  */
+/* ================================= */
+
+function startExperience() {
+
+
+    console.log(
+        "STARTING DIGITAL INDIA"
+    );
+
+
+    const idle =
+        document.getElementById(
+            "idle"
+        );
+
+
+    const videoScreen =
+        document.getElementById(
+            "videoScreen"
+        );
+
+
+    const video =
+        document.getElementById(
+            "digitalIndiaVideo"
+        );
+
+
+    /* ============================= */
+    /* HIDE IDLE                     */
+    /* ============================= */
+
+    idle.style.display =
+        "none";
+
+
+    /* ============================= */
+    /* SHOW VIDEO                    */
+    /* ============================= */
+
+    videoScreen.style.display =
+        "block";
+
+
+    /* ============================= */
+    /* RESET VIDEO                   */
+    /* ============================= */
+
+    video.currentTime = 0;
+
+
+    /* ============================= */
+    /* PLAY VIDEO                    */
+    /* ============================= */
+
+    video.play()
+
+        .then(() => {
+
+            console.log(
+                "VIDEO PLAYING"
+            );
+
+        })
+
+        .catch(error => {
+
+            console.log(
+                "VIDEO PLAY ERROR:",
+                error
+            );
+
+        });
+
+}
+
+
+/* ================================= */
+/* CHECK EVERY SECOND                */
+/* ================================= */
+
+setInterval(
+
+    checkTrigger,
+
+    1000
+
+);
+
+
+/* ================================= */
+/* CHECK IMMEDIATELY                 */
+/* ================================= */
+
+checkTrigger();
+
+
+</script>
+
 
 </body>
 
