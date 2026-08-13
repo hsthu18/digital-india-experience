@@ -16,12 +16,14 @@ html,
 body {
 
     margin: 0;
+
     width: 100%;
     height: 100%;
 
     overflow: hidden;
 
     background: #07111f;
+
     color: white;
 
     font-family: Arial, sans-serif;
@@ -136,64 +138,6 @@ p {
 
 }
 
-
-/* ============================= */
-/* TEST BUTTON                   */
-/* ============================= */
-
-#testButton {
-
-    position: fixed;
-
-    bottom: 30px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    z-index: 10000;
-
-    padding: 18px 35px;
-
-    font-size: 24px;
-
-    font-weight: bold;
-
-    border: none;
-
-    border-radius: 12px;
-
-    background: white;
-
-    color: black;
-
-    cursor: pointer;
-
-}
-
-
-/* ============================= */
-/* STATUS                        */
-/* ============================= */
-
-#status {
-
-    position: fixed;
-
-    top: 20px;
-
-    left: 20px;
-
-    z-index: 10001;
-
-    background: rgba(0,0,0,0.75);
-
-    padding: 10px 15px;
-
-    font-size: 16px;
-
-}
-
 </style>
 
 </head>
@@ -245,26 +189,6 @@ p {
 </div>
 
 
-<!-- ================================= -->
-<!-- TEST BUTTON                      -->
-<!-- ================================= -->
-
-<button
-    id="testButton"
-    style="display:none;">
-    ▶ TEST PLAY
-</button>
-
-
-<!-- ================================= -->
-<!-- STATUS                           -->
-<!-- ================================= -->
-
-<div id="status">
-    TABLET STARTING...
-</div>
-
-
 <script>
 
 
@@ -300,17 +224,15 @@ let initialized = false;
 const idle =
     document.getElementById("idle");
 
+
 const videoScreen =
     document.getElementById("videoScreen");
 
+
 const video =
-    document.getElementById("digitalIndiaVideo");
-
-const testButton =
-    document.getElementById("testButton");
-
-const status =
-    document.getElementById("status");
+    document.getElementById(
+        "digitalIndiaVideo"
+    );
 
 
 /* ================================= */
@@ -324,19 +246,6 @@ video.currentTime = 0;
 video.muted = true;
 
 video.playsInline = true;
-
-
-/* ================================= */
-/* STATUS FUNCTION                   */
-/* ================================= */
-
-function setStatus(message) {
-
-    console.log(message);
-
-    status.innerText = message;
-
-}
 
 
 /* ================================= */
@@ -371,12 +280,6 @@ async function checkTrigger() {
         console.log(
             "GOOGLE STATUS:",
             data
-        );
-
-
-        setStatus(
-            "Google: " +
-            (data.ok ? "CONNECTED" : "ERROR")
         );
 
 
@@ -419,8 +322,10 @@ async function checkTrigger() {
                 "NEW TRIGGER!"
             );
 
+
             lastTriggerId =
                 data.triggerId;
+
 
             startExperience();
 
@@ -434,10 +339,6 @@ async function checkTrigger() {
         console.log(
             "STATUS ERROR:",
             error
-        );
-
-        setStatus(
-            "Google connection error"
         );
 
     }
@@ -455,30 +356,26 @@ function startExperience() {
         "START EXPERIENCE"
     );
 
-    setStatus(
-        "START TRIGGER RECEIVED"
-    );
 
-
-    /* Hide idle */
+    /* ============================= */
+    /* HIDE IDLE                     */
+    /* ============================= */
 
     idle.style.display =
         "none";
 
 
-    /* Show video */
+    /* ============================= */
+    /* SHOW VIDEO                    */
+    /* ============================= */
 
     videoScreen.style.display =
         "block";
 
 
-    /* Show test button */
-
-    testButton.style.display =
-        "block";
-
-
-    /* Reset video */
+    /* ============================= */
+    /* RESET VIDEO                   */
+    /* ============================= */
 
     video.pause();
 
@@ -486,30 +383,16 @@ function startExperience() {
 
     video.muted = true;
 
-    video.playsInline = true;
 
-
-    /* Load */
-
-    video.load();
-
-
-    setStatus(
-        "VIDEO LOADING..."
-    );
-
-
-    /* Try autoplay */
+    /* ============================= */
+    /* PLAY                          */
+    /* ============================= */
 
     video.play()
 
         .then(() => {
 
             console.log(
-                "VIDEO PLAYING"
-            );
-
-            setStatus(
                 "VIDEO PLAYING"
             );
 
@@ -522,141 +405,9 @@ function startExperience() {
                 error
             );
 
-            setStatus(
-                "AUTOPLAY BLOCKED - TAP TEST PLAY"
-            );
-
         });
 
 }
-
-
-/* ================================= */
-/* MANUAL TEST PLAY                  */
-/* ================================= */
-
-testButton.addEventListener(
-    "click",
-    function () {
-
-        console.log(
-            "MANUAL TEST PLAY"
-        );
-
-
-        video.muted = true;
-
-
-        video.play()
-
-            .then(() => {
-
-                console.log(
-                    "MANUAL PLAY SUCCESS"
-                );
-
-                setStatus(
-                    "MANUAL PLAY SUCCESS"
-                );
-
-                testButton.style.display =
-                    "none";
-
-            })
-
-            .catch(error => {
-
-                console.log(
-                    "MANUAL PLAY ERROR:",
-                    error
-                );
-
-                setStatus(
-                    "MANUAL PLAY FAILED"
-                );
-
-            });
-
-    }
-);
-
-
-/* ================================= */
-/* VIDEO EVENTS                     */
-/* ================================= */
-
-video.addEventListener(
-    "loadeddata",
-    function () {
-
-        console.log(
-            "VIDEO LOADEDDATA"
-        );
-
-        setStatus(
-            "VIDEO DATA LOADED"
-        );
-
-    }
-);
-
-
-video.addEventListener(
-    "canplay",
-    function () {
-
-        console.log(
-            "VIDEO CAN PLAY"
-        );
-
-    }
-);
-
-
-video.addEventListener(
-    "playing",
-    function () {
-
-        console.log(
-            "VIDEO PLAYING EVENT"
-        );
-
-    }
-);
-
-
-video.addEventListener(
-    "waiting",
-    function () {
-
-        console.log(
-            "VIDEO WAITING / BUFFERING"
-        );
-
-    }
-);
-
-
-video.addEventListener(
-    "error",
-    function () {
-
-        console.log(
-            "VIDEO ERROR:",
-            video.error
-        );
-
-        if (video.error) {
-
-            setStatus(
-                "VIDEO ERROR: " +
-                video.error.code
-            );
-
-        }
-
-    }
-);
 
 
 /* ================================= */
@@ -667,31 +418,15 @@ video.addEventListener(
     "ended",
     function () {
 
-        console.log(
-            "VIDEO FINISHED"
-        );
-
-
         video.pause();
 
         video.currentTime = 0;
 
-
         videoScreen.style.display =
             "none";
 
-
-        testButton.style.display =
-            "none";
-
-
         idle.style.display =
             "flex";
-
-
-        setStatus(
-            "TABLET READY"
-        );
 
     }
 );
@@ -718,6 +453,7 @@ checkTrigger();
 
 
 </script>
+
 
 </body>
 
