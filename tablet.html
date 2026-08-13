@@ -182,10 +182,10 @@ p {
     <video
         id="digitalIndiaVideo"
         src="Snapchat-409127156.mp4"
-        autoplay
         muted
         playsinline
-        preload="auto">
+        preload="auto"
+        controls>
     </video>
 
 </div>
@@ -246,8 +246,6 @@ video.pause();
 video.currentTime = 0;
 
 video.muted = true;
-
-video.autoplay = true;
 
 video.playsInline = true;
 
@@ -393,23 +391,28 @@ function startExperience() {
 
 
     /* ============================= */
-    /* RESET VIDEO                   */
+    /* PREPARE VIDEO                 */
     /* ============================= */
 
     video.pause();
 
     video.currentTime = 0;
 
-
-    /* ============================= */
-    /* AUTOPLAY SETTINGS             */
-    /* ============================= */
-
     video.muted = true;
 
-    video.autoplay = true;
-
     video.playsInline = true;
+
+
+    /* ============================= */
+    /* RELOAD VIDEO                  */
+    /* ============================= */
+
+    video.load();
+
+
+    console.log(
+        "VIDEO LOADED - TRYING PLAY"
+    );
 
 
     /* ============================= */
@@ -459,23 +462,50 @@ video.addEventListener(
         );
 
 
-        /* Stop video */
-
         video.pause();
 
         video.currentTime = 0;
 
 
-        /* Hide video screen */
-
         videoScreen.style.display =
             "none";
 
 
-        /* Show idle screen */
-
         idle.style.display =
             "flex";
+
+    }
+);
+
+
+/* ================================= */
+/* VIDEO ERROR                      */
+/* ================================= */
+
+video.addEventListener(
+    "error",
+    function () {
+
+        console.log(
+            "VIDEO ERROR:",
+            video.error
+        );
+
+    }
+);
+
+
+/* ================================= */
+/* VIDEO CAN PLAY                   */
+/* ================================= */
+
+video.addEventListener(
+    "canplay",
+    function () {
+
+        console.log(
+            "VIDEO CAN PLAY"
+        );
 
     }
 );
