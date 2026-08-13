@@ -182,9 +182,10 @@ p {
     <video
         id="digitalIndiaVideo"
         src="Snapchat-409127156.mp4"
+        autoplay
+        muted
         playsinline
-        controls
-        preload="metadata">
+        preload="auto">
     </video>
 
 </div>
@@ -237,12 +238,18 @@ const video =
 
 
 /* ================================= */
-/* MAKE SURE VIDEO IS STOPPED        */
+/* INITIAL VIDEO STATE               */
 /* ================================= */
 
 video.pause();
 
 video.currentTime = 0;
+
+video.muted = true;
+
+video.autoplay = true;
+
+video.playsInline = true;
 
 
 /* ================================= */
@@ -252,7 +259,6 @@ video.currentTime = 0;
 async function checkTrigger() {
 
     try {
-
 
         const response =
             await fetch(
@@ -286,7 +292,6 @@ async function checkTrigger() {
         /* ============================= */
 
         if (!initialized) {
-
 
             /*
              * Remember current trigger.
@@ -332,7 +337,6 @@ async function checkTrigger() {
 
         ) {
 
-
             console.log(
                 "NEW TRIGGER!"
             );
@@ -367,7 +371,6 @@ async function checkTrigger() {
 
 function startExperience() {
 
-
     console.log(
         "START EXPERIENCE"
     );
@@ -390,7 +393,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* RESET                         */
+    /* RESET VIDEO                   */
     /* ============================= */
 
     video.pause();
@@ -399,29 +402,83 @@ function startExperience() {
 
 
     /* ============================= */
-    /* PLAY                          */
+    /* AUTOPLAY SETTINGS             */
     /* ============================= */
 
-    video.play()
+    video.muted = true;
 
-        .then(() => {
+    video.autoplay = true;
 
-            console.log(
-                "VIDEO PLAYING"
-            );
+    video.playsInline = true;
 
-        })
 
-        .catch(error => {
+    /* ============================= */
+    /* PLAY VIDEO                    */
+    /* ============================= */
 
-            console.log(
-                "PLAY ERROR:",
-                error
-            );
+    const playPromise =
+        video.play();
 
-        });
+
+    if (playPromise !== undefined) {
+
+        playPromise
+
+            .then(() => {
+
+                console.log(
+                    "VIDEO PLAYING"
+                );
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "PLAY ERROR:",
+                    error
+                );
+
+            });
+
+    }
 
 }
+
+
+/* ================================= */
+/* VIDEO FINISHED                   */
+/* ================================= */
+
+video.addEventListener(
+    "ended",
+    function () {
+
+        console.log(
+            "VIDEO FINISHED"
+        );
+
+
+        /* Stop video */
+
+        video.pause();
+
+        video.currentTime = 0;
+
+
+        /* Hide video screen */
+
+        videoScreen.style.display =
+            "none";
+
+
+        /* Show idle screen */
+
+        idle.style.display =
+            "flex";
+
+    }
+);
 
 
 /* ================================= */
