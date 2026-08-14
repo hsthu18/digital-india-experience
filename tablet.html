@@ -134,9 +134,9 @@ h2 {
 
 #qrContainer {
 
-    width: 230px;
+    width: 250px;
 
-    height: 230px;
+    height: 250px;
 
     background: white;
 
@@ -164,9 +164,9 @@ h2 {
 
 #qrCode {
 
-    width: 205px;
+    width: 225px;
 
-    height: 205px;
+    height: 225px;
 
 }
 
@@ -232,7 +232,7 @@ h2 {
 
 
 /* ================================= */
-/* OPTIONAL STATUS                   */
+/* STATUS                            */
 /* ================================= */
 
 #status {
@@ -245,7 +245,7 @@ h2 {
 
     font-size: 10px;
 
-    opacity: 0.25;
+    opacity: 0.20;
 
     z-index: 10000;
 
@@ -287,10 +287,12 @@ h2 {
     </h2>
 
 
-    <!-- SCAN MESSAGE -->
+    <!-- QR MESSAGE -->
 
     <div id="scanText">
-        SCAN TO START THE EXPERIENCE
+
+        SCAN QR TO START THE EXPERIENCE
+
     </div>
 
 
@@ -306,7 +308,9 @@ h2 {
     <!-- BOTTOM MESSAGE -->
 
     <div id="bottomText">
+
         SCAN INDIA. EXPLORE INDIA.
+
     </div>
 
 
@@ -371,22 +375,23 @@ const TOKEN =
 
 
 /* ================================= */
-/* QR TRIGGER URL                    */
+/* PHONE START EXPERIENCE PAGE       */
 /* ================================= */
 
 /*
- * This is the URL that the visitor's
- * phone will open when scanning.
+ * IMPORTANT:
  *
- * Opening this URL sends the START
- * command to Google Apps Script.
+ * Put the URL of your EXISTING
+ * phone Start Experience page here.
+ *
+ * The QR will open this page.
+ *
+ * DO NOT put the Google Apps Script
+ * URL here.
  */
 
-const QR_TRIGGER_URL =
-    API_URL +
-    "?action=trigger" +
-    "&token=" +
-    encodeURIComponent(TOKEN);
+const PHONE_START_PAGE =
+"https://hsthu18.github.io/digital-india-experience/";
 
 
 /* ================================= */
@@ -399,11 +404,11 @@ new QRCode(
 
     {
 
-        text: QR_TRIGGER_URL,
+        text: PHONE_START_PAGE,
 
-        width: 205,
+        width: 225,
 
-        height: 205,
+        height: 225,
 
         colorDark: "#000000",
 
@@ -520,11 +525,12 @@ async function checkTrigger() {
 
 
             /*
-             * Remember the current trigger.
+             * Remember the trigger that
+             * already exists.
              *
              * This prevents an old trigger
-             * from starting the video when
-             * the tablet is first opened.
+             * from starting the experience
+             * when the tablet first opens.
              */
 
             lastTriggerId =
@@ -650,7 +656,7 @@ function startExperience() {
 
 
     /* ============================= */
-    /* TRY TO PLAY                   */
+    /* TRY AUTOMATIC PLAY            */
     /* ============================= */
 
     video.play()
@@ -683,9 +689,9 @@ function startExperience() {
              * Chrome may block automatic
              * playback.
              *
-             * The video controls remain
-             * available, so visitor can
-             * tap Play.
+             * Controls are intentionally
+             * enabled for now so that
+             * Play can be tapped.
              */
 
             setStatus(
@@ -714,7 +720,7 @@ video.addEventListener(
         );
 
 
-        /* Stop */
+        /* Stop video */
 
         video.pause();
 
@@ -727,7 +733,7 @@ video.addEventListener(
             "none";
 
 
-        /* Return to idle */
+        /* Return to idle screen */
 
         idle.style.display =
             "flex";
