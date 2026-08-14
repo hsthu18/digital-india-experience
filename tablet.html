@@ -8,9 +8,14 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Digital India</title>
+<title>Digital India 2047</title>
+
 
 <style>
+
+/* ================================= */
+/* BASIC PAGE                        */
+/* ================================= */
 
 html,
 body {
@@ -31,9 +36,9 @@ body {
 }
 
 
-/* ============================= */
-/* IDLE SCREEN                   */
-/* ============================= */
+/* ================================= */
+/* IDLE SCREEN                       */
+/* ================================= */
 
 #idle {
 
@@ -61,47 +66,131 @@ body {
 }
 
 
+/* ================================= */
+/* FLAG                              */
+/* ================================= */
+
 #flag {
 
-    font-size: 70px;
+    font-size: 65px;
+
+    margin-bottom: 5px;
 
 }
 
+
+/* ================================= */
+/* MAIN TITLE                        */
+/* ================================= */
 
 h1 {
 
-    font-size: 55px;
+    font-size: 52px;
 
-    letter-spacing: 3px;
+    letter-spacing: 4px;
 
-    margin: 10px 0;
+    margin: 5px 0;
 
 }
 
+
+/* ================================= */
+/* SUBTITLE                          */
+/* ================================= */
 
 h2 {
 
-    font-size: 32px;
+    font-size: 30px;
 
-    margin: 10px 0;
+    letter-spacing: 2px;
 
-}
-
-
-p {
-
-    font-size: 22px;
-
-    margin-top: 30px;
-
-    opacity: 0.85;
+    margin: 5px 0 15px 0;
 
 }
 
 
-/* ============================= */
-/* VIDEO SCREEN                  */
-/* ============================= */
+/* ================================= */
+/* QR INSTRUCTION                    */
+/* ================================= */
+
+#scanText {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    margin-top: 5px;
+
+    margin-bottom: 15px;
+
+}
+
+
+/* ================================= */
+/* QR CONTAINER                      */
+/* ================================= */
+
+#qrContainer {
+
+    width: 230px;
+
+    height: 230px;
+
+    background: white;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 0 25px rgba(255,255,255,0.25);
+
+}
+
+
+/* ================================= */
+/* QR CODE                           */
+/* ================================= */
+
+#qrCode {
+
+    width: 205px;
+
+    height: 205px;
+
+}
+
+
+/* ================================= */
+/* BOTTOM TEXT                       */
+/* ================================= */
+
+#bottomText {
+
+    font-size: 20px;
+
+    margin-top: 18px;
+
+    opacity: 0.9;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* ================================= */
+/* VIDEO SCREEN                      */
+/* ================================= */
 
 #videoScreen {
 
@@ -109,32 +198,56 @@ p {
 
     position: fixed;
 
-    inset: 0;
+    top: 0;
+    left: 0;
 
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 
     background: black;
 
     z-index: 9999;
 
+    overflow: hidden;
+
 }
 
 
-/* ============================= */
-/* VIDEO                         */
-/* ============================= */
+/* ================================= */
+/* VIDEO                             */
+/* ================================= */
 
 #digitalIndiaVideo {
 
     display: block;
 
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 
     object-fit: contain;
 
     background: black;
+
+}
+
+
+/* ================================= */
+/* OPTIONAL STATUS                   */
+/* ================================= */
+
+#status {
+
+    position: fixed;
+
+    bottom: 5px;
+
+    left: 5px;
+
+    font-size: 10px;
+
+    opacity: 0.25;
+
+    z-index: 10000;
 
 }
 
@@ -152,21 +265,50 @@ p {
 
 <div id="idle">
 
+
+    <!-- FLAG -->
+
     <div id="flag">
         🇮🇳
     </div>
+
+
+    <!-- TITLE -->
 
     <h1>
         DIGITAL INDIA
     </h1>
 
+
+    <!-- SUBTITLE -->
+
     <h2>
         INDIA @ 2047
     </h2>
 
-    <p>
+
+    <!-- SCAN MESSAGE -->
+
+    <div id="scanText">
+        SCAN TO START THE EXPERIENCE
+    </div>
+
+
+    <!-- QR CODE -->
+
+    <div id="qrContainer">
+
+        <div id="qrCode"></div>
+
+    </div>
+
+
+    <!-- BOTTOM MESSAGE -->
+
+    <div id="bottomText">
         SCAN TODAY. SHAPE TOMORROW.
-    </p>
+    </div>
+
 
 </div>
 
@@ -177,16 +319,36 @@ p {
 
 <div id="videoScreen">
 
+
     <video
         id="digitalIndiaVideo"
-        src="Viksit Bharat @ 2047.mp4"
+        src="Snapchat-409127156.mp4"
         muted
         playsinline
         preload="auto"
         controls>
     </video>
 
+
 </div>
+
+
+<!-- ================================= -->
+<!-- STATUS                            -->
+<!-- ================================= -->
+
+<div id="status">
+    TABLET READY
+</div>
+
+
+<!-- ================================= -->
+<!-- QR CODE LIBRARY                   -->
+<!-- ================================= -->
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+</script>
 
 
 <script>
@@ -206,6 +368,53 @@ const API_URL =
 
 const TOKEN =
 "DIGITALINDIA2047";
+
+
+/* ================================= */
+/* QR TRIGGER URL                    */
+/* ================================= */
+
+/*
+ * This is the URL that the visitor's
+ * phone will open when scanning.
+ *
+ * Opening this URL sends the START
+ * command to Google Apps Script.
+ */
+
+const QR_TRIGGER_URL =
+    API_URL +
+    "?action=trigger" +
+    "&token=" +
+    encodeURIComponent(TOKEN);
+
+
+/* ================================= */
+/* CREATE QR CODE                    */
+/* ================================= */
+
+new QRCode(
+
+    document.getElementById("qrCode"),
+
+    {
+
+        text: QR_TRIGGER_URL,
+
+        width: 205,
+
+        height: 205,
+
+        colorDark: "#000000",
+
+        colorLight: "#ffffff",
+
+        correctLevel:
+            QRCode.CorrectLevel.H
+
+    }
+
+);
 
 
 /* ================================= */
@@ -235,6 +444,10 @@ const video =
     );
 
 
+const status =
+    document.getElementById("status");
+
+
 /* ================================= */
 /* INITIAL VIDEO STATE               */
 /* ================================= */
@@ -249,12 +462,26 @@ video.playsInline = true;
 
 
 /* ================================= */
-/* CHECK GOOGLE                     */
+/* STATUS FUNCTION                   */
+/* ================================= */
+
+function setStatus(message) {
+
+    console.log(message);
+
+    status.innerText = message;
+
+}
+
+
+/* ================================= */
+/* CHECK GOOGLE APPS SCRIPT          */
 /* ================================= */
 
 async function checkTrigger() {
 
     try {
+
 
         const response =
             await fetch(
@@ -262,12 +489,14 @@ async function checkTrigger() {
                 API_URL +
                 "?action=status" +
                 "&token=" +
-                TOKEN +
+                encodeURIComponent(TOKEN) +
                 "&t=" +
                 Date.now(),
 
                 {
+
                     cache: "no-store"
+
                 }
 
             );
@@ -289,14 +518,37 @@ async function checkTrigger() {
 
         if (!initialized) {
 
+
+            /*
+             * Remember the current trigger.
+             *
+             * This prevents an old trigger
+             * from starting the video when
+             * the tablet is first opened.
+             */
+
             lastTriggerId =
                 data.triggerId || "";
 
+
             initialized = true;
+
+
+            setStatus(
+                "TABLET READY"
+            );
+
 
             console.log(
                 "TABLET READY"
             );
+
+
+            console.log(
+                "Existing trigger:",
+                lastTriggerId
+            );
+
 
             return;
 
@@ -318,6 +570,7 @@ async function checkTrigger() {
 
         ) {
 
+
             console.log(
                 "NEW TRIGGER!"
             );
@@ -336,9 +589,15 @@ async function checkTrigger() {
 
     catch (error) {
 
+
         console.log(
             "STATUS ERROR:",
             error
+        );
+
+
+        setStatus(
+            "CONNECTION ERROR"
         );
 
     }
@@ -352,8 +611,14 @@ async function checkTrigger() {
 
 function startExperience() {
 
+
     console.log(
         "START EXPERIENCE"
+    );
+
+
+    setStatus(
+        "EXPERIENCE STARTING"
     );
 
 
@@ -385,25 +650,48 @@ function startExperience() {
 
 
     /* ============================= */
-    /* PLAY                          */
+    /* TRY TO PLAY                   */
     /* ============================= */
 
     video.play()
 
         .then(() => {
 
+
             console.log(
                 "VIDEO PLAYING"
             );
+
+
+            setStatus(
+                "VIDEO PLAYING"
+            );
+
 
         })
 
         .catch(error => {
 
+
             console.log(
                 "PLAY ERROR:",
                 error
             );
+
+
+            /*
+             * Chrome may block automatic
+             * playback.
+             *
+             * The video controls remain
+             * available, so visitor can
+             * tap Play.
+             */
+
+            setStatus(
+                "TAP PLAY TO START"
+            );
+
 
         });
 
@@ -415,20 +703,65 @@ function startExperience() {
 /* ================================= */
 
 video.addEventListener(
+
     "ended",
+
     function () {
+
+
+        console.log(
+            "VIDEO FINISHED"
+        );
+
+
+        /* Stop */
 
         video.pause();
 
         video.currentTime = 0;
 
+
+        /* Hide video */
+
         videoScreen.style.display =
             "none";
+
+
+        /* Return to idle */
 
         idle.style.display =
             "flex";
 
+
+        setStatus(
+            "TABLET READY"
+        );
+
+
     }
+
+);
+
+
+/* ================================= */
+/* VIDEO ERROR                      */
+/* ================================= */
+
+video.addEventListener(
+
+    "error",
+
+    function () {
+
+
+        console.log(
+            "VIDEO ERROR:",
+            video.error
+        );
+
+
+    }
+
 );
 
 
